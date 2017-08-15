@@ -22,7 +22,39 @@ def get_files_in_directory(path):
 	# for file_path in listOfFilepaths:
 	# 	print file_path
 
+
+# Extract contents and process them.
+def extractData(filename):
+	# open filename as file
+	with open(filename) as file:
+		# extract the content in the file and store it in data
+		data = "".join(line.rstrip() for line in file)
+		# lower case the words
+		data = data.lower()
+		# print data
+		# print "abhi\n"
+		# Use BeautifulSoup to read xml format
+		soup = BeautifulSoup(data, 'html.parser')
+		# print soup
+		# print "shek\n"
+		# Exraxt the text from the respective tags
+		title = soup.find("title").get_text()
+		text = soup.find("text").get_text()
+		# textContent stores the text of both the title and text tags.
+		textContent = (title+text).strip()
+		# Tokenize the text and store in listOfTextContent
+		listOfTextContent = wordpunct_tokenize(textContent)
+		# Remove stopwords from the list
+		for word in listOfTextContent:
+			if word not in stop_words:
+				stemmedWords.append(porter.stem(word))
+		# print stemmedWords
+		# print "\n\n\n"
+		# stemmedWords contains all the words(tokenized and stemmed) except stopwords
+
+
 # argument(folder path) is given in the command line
 path=sys.argv[1]
 # Call get_files_in_directory function to get the list of all the paths of the files
 get_files_in_directory(path)
+
