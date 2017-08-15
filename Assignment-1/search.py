@@ -72,4 +72,15 @@ def pushToDict(filename):
 path=sys.argv[1]
 # Call get_files_in_directory function to get the list of all the paths of the files
 get_files_in_directory(path)
+print ""
+# Iterate through every file and extractData
+count=0
+for filename in listOfFilepaths:
+	# filename=listOfFilepaths[filePath]
+	# print filename
+	extractData(filename)
+	pushToDict(count)
+	count+=1
+	print count
+	
 
