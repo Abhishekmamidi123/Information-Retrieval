@@ -53,6 +53,21 @@ def extractData(filename):
 		# stemmedWords contains all the words(tokenized and stemmed) except stopwords
 
 
+def pushToDict(filename):
+	# {{word: {filename: frequency, filename2: frequency}}}
+	for word in stemmedWords:
+		if word not in DictionaryOfWords:
+			DictionaryOfWords[word] = {}
+			DictionaryOfWords[word][filename] = 1
+		else:
+			temp = DictionaryOfWords[word]
+			if filename in temp:
+				DictionaryOfWords[word][filename]+=1
+			else:
+				DictionaryOfWords[word][filename] = 1
+
+
+
 # argument(folder path) is given in the command line
 path=sys.argv[1]
 # Call get_files_in_directory function to get the list of all the paths of the files
