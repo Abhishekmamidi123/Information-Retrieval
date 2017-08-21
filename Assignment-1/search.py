@@ -28,7 +28,6 @@ try:
 except NameError:
     to_unicode = str
 
-
 stemmedWords = []
 # The main dictionary in which all the data is stored.
 DictionaryOfWords = {}
@@ -36,23 +35,23 @@ stop_words = set(stopwords.words('english'))
 stop_words.update(['.', ',', '"', "'", '?', '!', ':', ';', '(', ')', '[', ']', '{', '}']) # remove it if you need punctuation
 porter = PorterStemmer()
 
-
 # Get the paths of all files in the directory and store it in the list  "listOfFilepaths"
 listOfFilepaths={}
 def get_files_in_directory(path):
-	count = 0
-	for root, dirs, files in os.walk(path):
-        	if len(files)!=0:
-				for file in files:
-					listOfFilepaths[count]=(root+"/"+file)
-					count+=1
-	DictionaryOfWords["filenames"]=listOfFilepaths
+    count = 0
+    for root, dirs, files in os.walk(path):
+        if len(files)!=0:
+            for file in files:
+                listOfFilepaths[count]=(root+"/"+file)
+                count+=1
+                
 	# print DictionaryOfWords
-	for word in DictionaryOfWords:
-		print word, DictionaryOfWords[word]
-	print "\n"
-	print listOfFilepaths
-	# for file_path in listOfFilepaths:
+    DictionaryOfWords["filenames"]=listOfFilepaths
+    for word in DictionaryOfWords:
+        print word, DictionaryOfWords[word]
+    print "\n"
+    print listOfFilepaths
+    # for file_path in listOfFilepaths:
 	# 	print file_path
 
 # Extract contents and process them.
@@ -83,14 +82,15 @@ def pushToDict(fileno):
 	for word in stemmedWords:
 		if word not in DictionaryOfWords:
 			DictionaryOfWords[word] = {}
+			DictionaryOfWords[word]["count"]=1
 			DictionaryOfWords[word][fileno] = 1
 		else:
+			DictionaryOfWords[word]["count"]+=1
 			temp = DictionaryOfWords[word]
 			if fileno in temp:
 				DictionaryOfWords[word][fileno]+=1
 			else:
 				DictionaryOfWords[word][fileno] = 1
-
 
 # main function
 # argument(folder path) is given in the command line
@@ -101,6 +101,8 @@ get_files_in_directory(path)
 for fileno in listOfFilepaths:
 	extractData(listOfFilepaths[fileno])
 	pushToDict(fileno)
+	stemmedWords=[]
+	print DictionaryOfWords
 	print fileno
 
 # Just for printing
@@ -114,18 +116,4 @@ with io.open('data.json', 'w', encoding='utf8') as outfile:
                       indent=4, sort_keys=True,
                       separators=(',', ': '), ensure_ascii=False)
     outfile.write(to_unicode(str_))
-
-# Open and read an json file
-# with open('data.json') as data_file:
-#     data_loaded = json.load(data_file)
-# for word in data_loaded:
-# 	print word, data_loaded[word]
-
-# Query search
-# query = "total newspaper"
-# queryList = wordpunct_tokenize(query)
-#
-# for word in queryList:
-# 	if word not in stop_words:
-# 		print word, DictionaryOfWords[porter.stem(word)]
 
