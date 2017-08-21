@@ -79,18 +79,26 @@ def extractData(filename):
 
 def pushToDict(fileno):
 	# {{word: {fileno: frequency, fileno: frequency}}}
+	index=0
 	for word in stemmedWords:
 		if word not in DictionaryOfWords:
 			DictionaryOfWords[word] = {}
 			DictionaryOfWords[word]["count"]=1
-			DictionaryOfWords[word][fileno] = 1
+			DictionaryOfWords[word][fileno] = []
+			DictionaryOfWords[word][fileno].append(1)
+			DictionaryOfWords[word][fileno].append(index)
 		else:
 			DictionaryOfWords[word]["count"]+=1
 			temp = DictionaryOfWords[word]
 			if fileno in temp:
-				DictionaryOfWords[word][fileno]+=1
+				# DictionaryOfWords[word][fileno]+=1
+				DictionaryOfWords[word][fileno][0]+=1
+				DictionaryOfWords[word][fileno].append(index)
 			else:
-				DictionaryOfWords[word][fileno] = 1
+				DictionaryOfWords[word][fileno] = []
+				DictionaryOfWords[word][fileno].append(1)
+				DictionaryOfWords[word][fileno].append(index)
+		index=index+1
 
 # main function
 # argument(folder path) is given in the command line
