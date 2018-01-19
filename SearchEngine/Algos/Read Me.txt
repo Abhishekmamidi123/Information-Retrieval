@@ -1,0 +1,39 @@
+Total Files Required for both:
+	file_paths.json 		 Eg:- {"1":path1,"2":path2,....}
+	file_paths.json 		 Eg:- {"1":path1,"2":path2,....}
+	word_frequrncy_in_each_file.json Eg:- {"w1":{count: c, "1":[freq, pos1,pos2]},.. }
+	topFrequentWords.txt
+
+
+1) python cosine_similarity_preprocessing.py
+
+   Files Needed:
+	file_paths.json 		 Eg:- {"1":path1,"2":path2,....}
+	file_paths.json 		 Eg:- {"1":path1,"2":path2,....}
+	word_frequrncy_in_each_file.json Eg:- {"w1":{count: c, "1":[freq, pos1,pos2]},.. }
+
+   Files Generated:
+	cosine_doc_vectors.json
+
+2) python cosine_similarity_query.py 
+
+   Files Needed:
+	cosine_doc_vectors.json
+	file_paths.json 		 Eg:- {"1":path1,"2":path2,....}
+	word_frequrncy_in_each_file.json Eg:- {"w1":{count: c, "1":[freq, pos1,pos2]},.. }
+
+1) python tf-idf_preprocessing.py
+
+    Files Needed:
+	file_paths.json 		 Eg:- {"1":path1,"2":path2,....}
+	word_frequrncy_in_each_file.json Eg:- {"w1":{count: c, "1":[freq, pos1,pos2]},.. }
+	
+    Files Generated:
+	tf_idf_vectors.json
+
+2) python tf-idf_query.py
+
+    Files Needed:
+	tf_idf_vectors.json
+	file_paths.json 		 Eg:- {"1":path1,"2":path2,....}
+	word_frequrncy_in_each_file.json Eg:- {"w1":{count: c, "1":[freq, pos1,pos2]},.. }

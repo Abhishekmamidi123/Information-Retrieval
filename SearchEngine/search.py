@@ -19,7 +19,7 @@ from nltk.stem import PorterStemmer
 from nltk.tokenize import sent_tokenize, word_tokenize, wordpunct_tokenize
 from bs4 import BeautifulSoup
 from nltk.corpus import stopwords
-import cPickle as pickle
+# import cPickle as pickle
 import json
 # Make it work for Python 2+3 and with Unicode
 import io
@@ -43,18 +43,20 @@ def get_files_in_directory(path):
     for root, dirs, files in os.walk(path):
         if len(files)!=0:
             for file in files:
-                listOfFilepaths[count]=(root+"/"+file)
+                print(root+'/'+file)
                 count+=1
-
-	# print DictionaryOfWords
-    DictionaryOfWords["filenames"]=listOfFilepaths
+                listOfFilepaths[count]=(root+"/"+file)
+		# print(root+'/'+file)
+		# count+=1
+    # DictionaryOfWords["filenames"]=listOfFilepaths
     Files["filenames"]=listOfFilepaths
-    for word in DictionaryOfWords:
-        print word, DictionaryOfWords[word]
-    print "\n"
-    print listOfFilepaths
+    # for word in DictionaryOfWords:
+    #     print word, DictionaryOfWords[word]
+    # print "\n"
+    # print listOfFilepaths
     # for file_path in listOfFilepaths:
 	# 	print file_path
+	
 
 # Extract contents and process them.
 def extractData(filename):
@@ -67,8 +69,14 @@ def extractData(filename):
 		# Use BeautifulSoup to read xml format
 		soup = BeautifulSoup(data, 'html.parser')
 		# Exraxt the text from the respective tags
-		title = soup.find("title").get_text()
-		text = soup.find("text").get_text()
+		try:
+	    		title = soup.find("title").get_text()
+		except AttributeError:
+	    		title = ""
+		try:
+	    		text = soup.find("text").get_text()
+		except AttributeError:
+	    		text = ""
 		# textContent stores the text of both the title and text tags.
 		textContent = (title+text).strip()
 		# Tokenize the text and store in listOfTextContent
@@ -107,13 +115,20 @@ def pushToDict(fileno):
 path=sys.argv[1]
 # Call get_files_in_directory function to get the list of all the paths of the files
 get_files_in_directory(path)
+
+with io.open('filePaths.json', 'w', encoding='utf8') as outfile:
+    str_ = json.dumps(listOfFilepaths,
+                      indent=4, sort_keys=True,
+                      separators=(',', ': '), ensure_ascii=False)
+    outfile.write(to_unicode(str_))
+
 # Iterate through every file and extractData
 for fileno in listOfFilepaths:
+	print(listOfFilepaths[fileno])
 	extractData(listOfFilepaths[fileno])
 	pushToDict(fileno)
 	stemmedWords=[]
-	print DictionaryOfWords
-	print fileno
+	# print DictionaryOfWords
 
 # Just for printing
 # for word in DictionaryOfWords:
@@ -121,8 +136,9 @@ for fileno in listOfFilepaths:
 # print "\n"
 
 # Store in a json file
-with io.open('data.json', 'w', encoding='utf8') as outfile:
-    str_ = json.dumps(DictionaryOfWords,
-                      indent=4, sort_keys=True,
-                      separators=(',', ': '), ensure_ascii=False)
-    outfile.write(to_unicode(str_))
+with open('data.json', 'w') as outfile:
+    json.dump(DictionaryOfWords, outfile)
+#    str_ = json.dumps(DictionaryOfWords,
+#                      indent=4, sort_keys=True,
+#                      separators=(',', ': '), ensure_ascii=False)
+#    outfile.write(to_unicode(str_))
